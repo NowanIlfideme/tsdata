@@ -1,0 +1,8 @@
+name: tsdata
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pip=21.2
+  - pip:
+      - --editable .[dev]

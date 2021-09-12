@@ -1,0 +1,12 @@
+# Local editor files
+.vscode
+
+# Python temp files
+*.pyc
+__pycache__
+**.ipynb_checkpoints
+
+# setuptools files
+src/*.egg-info
+src/build
+src/dist
