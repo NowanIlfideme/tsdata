@@ -8,5 +8,5 @@ __pycache__
 
 # setuptools files
 src/*.egg-info
-src/build
-src/dist
+/build
+/dist

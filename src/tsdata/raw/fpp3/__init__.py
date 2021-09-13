@@ -8,12 +8,12 @@ from typing import Dict
 
 import pandas as pd
 
-from .registry import Loader, register_loader
+from ..registry import Loader, register_loader
 
 __all__ = []
 _funcs: Dict[str, Loader] = {}
 
-for _filename in (Path(__file__).parent / "fpp3_csv").glob("*.csv"):
+for _filename in Path(__file__).parent.glob("*.csv"):
     _name = _filename.stem
     __all__.append(_name)
 
