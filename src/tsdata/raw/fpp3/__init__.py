@@ -18,8 +18,8 @@ for _filename in Path(__file__).parent.glob("*.csv"):
     __all__.append(_name)
 
     @register_loader(_name)
-    def _loader_i() -> pd.DataFrame:
-        return pd.read_csv(_filename)
+    def _loader_i(_fn=_filename) -> pd.DataFrame:
+        return pd.read_csv(_fn)
 
     _loader_i.__qualname__ = _loader_i.__name__ = _name
     _funcs[_name] = _loader_i
