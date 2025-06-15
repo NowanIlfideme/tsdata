@@ -31,6 +31,11 @@ jobs:
           echo "Not a release/* merge, skipping."
           exit 0
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.7.13"
+
       - name: Set and commit final version
         run: |
           version="${{ steps.detect.outputs.version }}"
