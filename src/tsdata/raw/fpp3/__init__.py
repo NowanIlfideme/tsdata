@@ -4,14 +4,13 @@ This module is automatically generated from available CSV files.
 """
 
 from pathlib import Path
-from typing import Dict
 
 import pandas as pd
 
 from ..registry import Loader, register_loader
 
 __all__ = []
-_funcs: Dict[str, Loader] = {}
+_funcs: dict[str, Loader] = {}
 
 for _filename in Path(__file__).parent.glob("*.csv"):
     _name = _filename.stem
