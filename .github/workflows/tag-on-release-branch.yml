@@ -14,6 +14,9 @@ jobs:
     permissions:
       id-token: write # required for trusted publishing
       contents: write # required to create commit, tag, and push them
+      # Just in case :)
+      pull-requests: write
+      issues: write
 
     steps:
       - name: Check out repo
