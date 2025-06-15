@@ -1,3 +1,43 @@
+[project]
+name = "py-tsdata"
+version = "0.4.0"
+description = "Time Series Datasets"
+keywords = ["time series", "data", "pandas"]
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "NowanIlfideme", email = "git@nowan.dev" }]
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+]
+
+# Requirements
+requires-python = ">=3.10"
+dependencies = ["pandas>=2.0.0"]
+
+[project.optional-dependencies]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.16.0",
+    "pandas-stubs>=2.2.3.250527",
+    "pytest>=8.4.0",
+    "ruff>=0.11.13",
+]
+
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.7.13,<0.8"]
+build-backend = "uv_build"
+
+[tool.uv]
+package = true
+default-groups = ["dev"]
+
+[tool.uv.build-backend]
+module-name = "tsdata"
+module-root = "src"

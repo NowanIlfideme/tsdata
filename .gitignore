@@ -6,7 +6,10 @@
 __pycache__
 **.ipynb_checkpoints
 
-# setuptools files
+# Build files
 src/*.egg-info
 /build
 /dist
+
+# uv-specific files
+/uv.lock

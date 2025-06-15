@@ -1,6 +1,8 @@
 """Data registry. This is very much a work-in-progress."""
 
-from typing import Callable, Dict, List, Union
+from collections.abc import Callable
+from functools import partial
+from typing import TypeVar, overload
 
 import pandas as pd
 
@@ -8,10 +10,10 @@ __all__ = ["Loader", "available_data", "get_loader", "load_data", "register_load
 
 Loader = Callable[[], pd.DataFrame]
 
-__DATA_LOADERS__: Dict[str, Callable] = {}
+__DATA_LOADERS__: dict[str, Callable] = {}
 
 
-def available_data() -> List[str]:
+def available_data() -> list[str]:
     """Returns all available datasets."""
     global __DATA_LOADERS__
     return list(sorted(__DATA_LOADERS__.keys()))
@@ -32,7 +34,20 @@ def load_data(name: str) -> pd.DataFrame:
     return loader()
 
 
-def register_loader(name_or_func: Union[str, Loader]) -> Callable[[Loader], Loader]:
+TLoader = TypeVar("TLoader", bound=Loader)
+
+
+@overload
+def register_loader(name_or_func: str) -> Callable[[TLoader], TLoader]: ...
+
+
+@overload
+def register_loader(name_or_func: TLoader, *, name: str | None = None) -> TLoader: ...
+
+
+def register_loader(
+    name_or_func: str | Loader, *, name: str | None = None
+) -> Loader | Callable[[Loader], Loader]:
     """Decorator factory to register a data loader for a particular named dataset.
 
     Usage
@@ -55,20 +70,17 @@ def register_loader(name_or_func: Union[str, Loader]) -> Callable[[Loader], Load
 
     Both cases will register as: `df = load_data("my_dataset")`
     """
+    global __DATA_LOADERS__
 
     if isinstance(name_or_func, str):
         name = name_or_func
-        is_func = False
-    elif callable(name_or_func):
-        # FIXME: Check signature for a legal loader
-        name = name_or_func.__qualname__
-        is_func = True
-    else:
-        raise TypeError(f"Expected str or callable, got {name_or_func!r}.")
+        return partial(register_loader, name=name)  # type: ignore
 
-    def register(func: Loader) -> Loader:
-        """Registers a function as a loader for a particular dataset."""
-        global __DATA_LOADERS__
+    if callable(name_or_func):
+        # FIXME: Check signature for a legal loader
+        if name is None:
+            name = name_or_func.__qualname__
+        func = name_or_func
 
         if name in __DATA_LOADERS__.keys():
             raise ValueError(f"Attempted to redefine loader for {name!r}.")
@@ -77,6 +89,4 @@ def register_loader(name_or_func: Union[str, Loader]) -> Callable[[Loader], Load
 
         return func
 
-    if is_func:
-        return register(name_or_func)
-    return register
+    raise TypeError(f"Expected str or callable, got {name_or_func!r}.")

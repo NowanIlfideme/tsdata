@@ -6,9 +6,6 @@ The `tsdata` package itself contains a way of loading these into Pandas.
 
 **NOTE**: The PyPI name is `py-tsdata` due to confict with a removed package.
 
-**NOTE**: This package currently only includes the bare requirements.
-However, I will keep adding data and functionality over time.
-
 ## Installing
 
 You can install this as a regular Python package via pip:
