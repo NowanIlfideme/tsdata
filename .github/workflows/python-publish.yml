@@ -59,7 +59,8 @@ jobs:
         run: |
           uv sync --all-extras
 
-      - name: Publish the project to PyPI
+      - name: Build and publish the project to PyPI
         run: |
-          uv publish
+          uv build
+          uv publish --trusted-publishing always
         # NOTE: This works because of trusted publishing
