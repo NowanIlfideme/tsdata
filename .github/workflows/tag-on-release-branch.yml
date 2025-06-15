@@ -40,6 +40,7 @@ jobs:
         run: |
           version="${{ steps.detect.outputs.version }}"
           uv version $version
+
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git commit -am "🔖 Set final version $version"
@@ -51,11 +52,22 @@ jobs:
           git tag v$version
           git push origin v$version
 
+      - name: Install dependencies and build (to upload)
+        run: |
+          uv sync --all-extras
+          uv build
+
       - name: Create GitHub Release (draft)
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.detect.outputs.version }}
           name: v${{ steps.detect.outputs.version }}
+          files: dist/*
           draft: true
+          prerelease: ${{ contains(steps.detect.outputs.version, 'rc') }}  # will be `false` but helpful if reused
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to TestPyPI
+        run: |
+          uv publish --index testpypi  --trusted-publishing always
