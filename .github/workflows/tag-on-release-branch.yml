@@ -1,0 +1,56 @@
+name: Tag & Prepare Final Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-from-merge:
+    if: startsWith(github.event.head_commit.message, 'Merge pull request')  # Only for PR merges
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect if merged from release/* branch
+        id: detect
+        run: |
+          # Get merged branch name from commit message
+          pr_source=$(git log -1 --pretty=%B | grep -oE 'release/[0-9]+\.[0-9]+\.[0-9]+')
+          echo "source_branch=$pr_source" >> $GITHUB_OUTPUT
+          version="${pr_source#release/}"
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Abort if not a release branch
+        if: ${{ steps.detect.outputs.source_branch == '' }}
+        run: |
+          echo "Not a release/* merge, skipping."
+          exit 0
+
+      - name: Set and commit final version
+        run: |
+          version="${{ steps.detect.outputs.version }}"
+          uv version $version
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git commit -am "🔖 Set final version $version"
+          git push origin main
+
+      - name: Create tag
+        run: |
+          version="${{ steps.detect.outputs.version }}"
+          git tag v$version
+          git push origin v$version
+
+      - name: Create GitHub Release (draft)
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.detect.outputs.version }}
+          name: v${{ steps.detect.outputs.version }}
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,52 @@
+name: Pre-release to TestPyPI
+
+on:
+  push:
+    branches:
+      - 'release/*'
+
+jobs:
+  testpypi-pre-release:
+    name: Pre-release to TestPyPI
+    runs-on: ubuntu-latest
+    environment: "publish-testpypi"
+    permissions:
+      id-token: write # required for trusted publishing
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Needed to count commits
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.7.13"
+
+      - name: Extract version base and pre-release number
+        id: versioning
+        run: |
+          branch="${GITHUB_REF##*/}"  # e.g., release/0.1.2
+          base_version="${branch#release/}"
+
+          # Count commits since main (or fallback if main is not present)
+          git fetch origin main
+          rc_number=$(git rev-list --count origin/main..HEAD)
+          
+          full_version="${base_version}rc${rc_number}"
+          echo "Setting version to $full_version"
+
+          echo "full_version=$full_version" >> $GITHUB_OUTPUT
+
+      - name: Set version
+        run: |
+          uv version ${{ steps.versioning.outputs.full_version }}
+
+      - name: Install dependencies
+        run: |
+          uv sync --all-extras
+
+      - name: Build and publish to TestPyPI
+        run: |
+          uv build
+          uv publish --index testpypi  --trusted-publishing always
