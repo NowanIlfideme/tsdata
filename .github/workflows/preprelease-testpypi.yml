@@ -47,8 +47,6 @@ jobs:
           uv sync --all-extras
 
       - name: Build and publish to TestPyPI
-        env:
-          UV_PUBLISH_INDEX: https://test.pypi.org/legacy/
         run: |
           uv build
-          uv publish --index https://test.pypi.org/legacy/  --trusted-publishing always
+          uv publish --index testpypi  --trusted-publishing always
