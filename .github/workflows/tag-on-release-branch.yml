@@ -13,6 +13,7 @@ jobs:
     environment: "publish-testpypi"
     permissions:
       id-token: write # required for trusted publishing
+      contents: write # required to create commit, tag, and push them
 
     steps:
       - name: Check out repo
