@@ -1,6 +1,6 @@
 [project]
 name = "py-tsdata"
-version = "0.4.3"
+version = "0.4.4"
 description = "Time Series Datasets"
 keywords = ["time series", "data", "pandas"]
 readme = "README.md"
