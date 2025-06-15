@@ -1,13 +1,17 @@
 """Loads data exported from Forecasting: Principles and Practice, 3rd Edition.
 
 This module is automatically generated from available CSV files.
+
+See Also
+--------
+https://otexts.com/fpp3/
 """
 
 from pathlib import Path
 
 import pandas as pd
 
-from ..registry import Loader, register_loader
+from tsdata.raw.registry import Loader, register_loader
 
 __all__ = []
 _funcs: dict[str, Loader] = {}
