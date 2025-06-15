@@ -9,6 +9,10 @@ jobs:
   release-from-merge:
     if: startsWith(github.event.head_commit.message, 'Merge pull request')  # Only for PR merges
     runs-on: ubuntu-latest
+    
+    environment: "publish-testpypi"
+    permissions:
+      id-token: write # required for trusted publishing
 
     steps:
       - name: Check out repo
