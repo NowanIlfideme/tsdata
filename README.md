@@ -16,15 +16,7 @@ pip install py-tsdata
 
 ## Quickstart
 
-Check the version of the package after importing it:
-
-```python
->>> import tsdata
->>> print(tsdata.__version__)
-0.3.0
-```
-
-You can see available datasets and load them directly into Pandas:
+Load a dataset directly into Pandas from a `dict`-like interface:
 
 ```python
 >>> from tsdata.fpp3 import raw
