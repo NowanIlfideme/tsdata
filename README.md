@@ -28,12 +28,12 @@ You can see available datasets and load them directly into Pandas:
 
 ```python
 >>> from tsdata.fpp3 import raw
->>> "LakeHuron" in raw
+>>> "Tourism" in raw
 True
->>> raw["LakeHuron"].iloc[:2]
-                   Time       Demand  Temperature        Date  Holiday
-0  2011-12-31T13:00:00Z  4382.825174        21.40  2012-01-01     True
-1  2011-12-31T13:30:00Z  4263.365526        21.05  2012-01-01     True
+>>> raw["Tourism"].head(2)
+   Quarter    Region            State   Purpose       Trips
+0  1998 Q1  Adelaide  South Australia  Business  135.077690
+1  1998 Q2  Adelaide  South Australia  Business  109.987316
 ```
 
 ## Supported Datasets
